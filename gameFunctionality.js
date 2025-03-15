@@ -42,7 +42,69 @@ export function wasClicked(cell, buttonElement, event) {
 
     // Check if this click results in a win
     if (hasWon(cell)) {
-        alert("Bingo! You've won!");
+        //alert("Bingo! You've won!");
+        // Create an image element
+        const winImage = document.createElement('img');
+        
+        // Set the image source (replace 'your-image-url.jpg' with your actual image URL or file path)
+        winImage.src = 'pngtree-bingo-ball-png-image_6462732.png';
+        
+        // Set the alt text (for accessibility)
+        winImage.alt = 'Congratulations! You win!';
+        
+        // Style the image (optional, adjust as necessary)
+        winImage.style.position = 'absolute';
+        winImage.style.top = '50%'; // Position it in the center
+        winImage.style.left = '50%';
+        winImage.style.transform = 'translate(-50%, -50%)'; // Center it perfectly
+        winImage.style.zIndex = '10'; // Make sure it appears on top of other elements
+        winImage.style.maxWidth = '80%'; // Adjust the image size (optional)
+        winImage.style.maxHeight = '80%'; // Adjust the image size (optional)
+
+        // Append the image to the body (or a specific container)
+        document.body.appendChild(winImage);
+
+        // Create a Restart Button
+        const restartButton = document.createElement('button');
+        restartButton.textContent = 'Restart Game';
+        restartButton.style.position = 'absolute';
+        restartButton.style.top = '65%';  // Position below the image
+        restartButton.style.left = '50%';
+        restartButton.style.transform = 'translateX(-50%)'; // Center horizontally
+        restartButton.style.padding = '10px 20px';
+        restartButton.style.fontSize = '20px';
+        restartButton.style.backgroundColor = 'rgb(48, 61, 143)';
+        restartButton.style.color = 'white';
+        restartButton.style.border = 'none';
+        restartButton.style.cursor = 'pointer';
+        restartButton.style.zIndex = '10000'; // Make sure it's above other content
+
+        // Style the button on hover
+        restartButton.addEventListener('mouseover', function() {
+            restartButton.style.backgroundColor = 'rgb(255, 217, 0)'; // Change on hover
+        });
+
+        restartButton.addEventListener('mouseout', function() {
+            restartButton.style.backgroundColor = 'rgb(48, 61, 143)'; // Revert back
+        });
+
+        // Append the button to the body (or a specific container)
+        document.body.appendChild(restartButton);
+
+        // Add event listener to restart the game when the button is clicked
+        restartButton.addEventListener('click', function() {
+            // Optionally, you can remove the current grid and reset the game here
+            // Clear the existing game board
+            document.getElementById('bingo-grid').innerHTML = '';  // Clear the grid
+            bingoCard = []; // Reset the bingo card array
+            
+            // Remove the win image and restart button
+            winImage.remove();
+            restartButton.remove();
+
+            // Call the function to generate a new Bingo board
+            generateBingoBoard(); // This will re-generate the Bingo board
+        });
     }
 }
 
