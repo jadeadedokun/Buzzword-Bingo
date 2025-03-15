@@ -1,4 +1,5 @@
 import { BingoCell } from './BingoCell.js';
+import { wasClicked, hasWon } from './gameFunctionality.js';
 
 // Bingo board stored as a 2D array
 let bingoCard = [];
@@ -50,19 +51,13 @@ async function generateBingoBoard() {
                 cellElement.classList.add("marked");
             }
 
-            // Attach click event
-            cellElement.addEventListener("click", () => toggleCell(cell, cellElement));
+            // Attach click event, calling wasClicked which will handle both toggling and win checking
+            cellElement.addEventListener("click", () => wasClicked(cell, cellElement));
 
             grid.appendChild(cellElement);
         }
         bingoCard.push(rowArray); // Push row into the main 2D array
     }
-}
-
-// Function to toggle cell selection
-function toggleCell(cell, cellElement) {
-    cell.isClicked = !cell.isClicked; // Toggle state
-    cellElement.classList.toggle("marked", cell.isClicked);
 }
 
 // Generate a new bingo board when the page loads
