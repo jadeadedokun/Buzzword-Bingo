@@ -73,7 +73,7 @@
             font-size: 12px; /* Reduced font size to fit more text */
             background-color: rgb(255, 255, 255);
             color: rgb(48, 61, 143);
-            border: none;
+            border: 2px rgb(48, 61, 143);
             cursor: pointer;
             word-wrap: break-word; /* Allow words to wrap */
             overflow: hidden; /* Hide overflow */
@@ -100,18 +100,7 @@
         .button-star i {
             font-size: 50px; 
         }
-        /* Red Circle Overlay */
-        .red-circle {
-            position: fixed; /* Changed to fixed for better positioning */
-            width: 70px; /* Adjust size of the circle */
-            height: 70px; /* Adjust size of the circle */
-            background-color: rgba(226, 49, 49, 0.747);
-            border-radius: 50%;
-            z-index: 4; /* Make sure it's above the grid */
-            transform: translate(-50%, -50%); /* Center the circle on the click point */
-            display: none; /* Hidden by default */
-            pointer-events: none; /* Ensures clicks go through to buttons */
-        }
+        
     </style>
 </head>
 <body>
@@ -123,8 +112,6 @@
     <!-- This will be replaced with the dynamically populated bingo grid -->
     <div id="bingo-grid" class="square"></div>
     
-    <!-- Red Circle Overlay -->
-    <div class="red-circle" id="redCircle"></div>
 
     <!-- Import modules -->
     <script type="module" src="BingoCell.js"></script>
