@@ -1,9 +1,3 @@
-CREATE TABLE scores (
-    id SERIAL PRIMARY KEY,
-    player VARCHAR(255),
-    time INT  -- Time in seconds
-);
-
 CREATE TABLE words (
     id SERIAL PRIMARY KEY,
     word VARCHAR(255) UNIQUE,  -- Ensures each word is stored once
