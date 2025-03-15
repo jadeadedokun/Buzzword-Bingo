@@ -3,7 +3,7 @@ const sqlite3 = require("sqlite3").verbose();
 const scoresDB = new sqlite3.Database("scores.db");
 const wordsDB = new sqlite3.Database("words.db");
 
-function insertScore(player, time) {
+function insertScore(nickname, time) {
     scoresDB.run("INSERT INTO scores (player, time) VALUES (?, ?)", [nickname, time]);
 }
 

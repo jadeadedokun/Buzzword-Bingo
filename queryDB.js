@@ -5,7 +5,7 @@ const wordsDB = new sqlite3.Database("words.db");
 
 
 function listTopPlayers() {
-    scoresDB.all("SELECT player, time FROM scores ORDER BY time ASC LIMIT 5", (err, rows) => {
+    scoresDB.all("SELECT nickname, time FROM scores ORDER BY time ASC LIMIT 5", (err, rows) => {
         rows.forEach((row) => console.log(`${row.nickname}, ${row.time}`));
         scoresDB.close();
     });
