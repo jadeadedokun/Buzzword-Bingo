@@ -68,6 +68,13 @@
         button:hover {
             background-color: rgb(226, 49, 49);
         }
+        #error-message {
+            color: rgb(255, 100, 100); /* Red text */
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 5px;
+            display: none; /* Initially hidden */
+        }
     </style>
 </head>
 <body>
@@ -75,21 +82,33 @@
     <h1>BUZZWORD</h1>
     <h2>BINGO</h2>
     <p>Enter your nickname to start:</p>
-    <input type="text" id="playerName" placeholder="Your Nickname">
-    <br>
+    <input type="text" id="playerName" placeholder="Your Nickname" onkeydown="checkEnter(event)">
+    <p id="error-message">Please enter a nickname!</p> <!-- Error message appears here -->
     <button onclick="startGame()">Start Game</button>
 
     <script>
         function startGame() {
-            let name = document.getElementById("playerName").value.trim();
+            let nameInput = document.getElementById("playerName");
+            let errorMessage = document.getElementById("error-message");
+            let name = nameInput.value.trim();
 
             if (name === "") {
-                alert("Please enter your nickname to continue!");
+                errorMessage.style.display = "block"; // Show error message
                 return;
             }
 
             localStorage.setItem("playerName", name); // Store name for later use
-            window.location.href = "bingo.html"; // Redirect to bingo game page
+            window.location.href = "interface.html"; // Redirect to bingo game page
+        }
+
+        function checkEnter(event) {
+            let errorMessage = document.getElementById("error-message");
+            
+            if (event.key === "Enter") { // If user presses Enter
+                startGame(); // Call startGame function
+            } else {
+                errorMessage.style.display = "none"; // Hide error when typing
+            }
         }
     </script>
 
