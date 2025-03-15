@@ -12,3 +12,28 @@ app.post("/click-word", async (req, res) => {
   );
   res.send("Word click updated!"); // Delete this
 });
+
+// leaderboard
+app.get("/leaderboard/times", async (req, res) => {
+  try {
+    const result = await pool.query(
+      "SELECT player, time FROM games ORDER BY time ASC LIMIT 5"
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
+});
+
+app.get("/leaderboard/words", async (req, res) => {
+  try {
+    const result = await pool.query(
+      "SELECT word, count FROM clicks ORDER BY count DESC LIMIT 5"
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
+});
