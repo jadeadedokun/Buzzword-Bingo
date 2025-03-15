@@ -42,7 +42,7 @@
         }
         .background-rectangle {
             position: absolute; 
-            width: 650px; /* Increased width to accommodate longer words */
+            width: 700px; /* Increased width */
             height: 800px; 
             background-color:rgb(48, 61, 143);
             z-index: 1; 
@@ -50,34 +50,47 @@
             border-radius: 30px;
         }
         .square {
-            width: 550px; /* Increased width to accommodate longer words */
+            width: 600px; /* Increased width */
             height: 500px;
-            background-color: rgb(48, 61, 143);  /* colour for grid lines*/
+            background-color: rgb(48, 61, 143);
             margin-top: 200px;
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             grid-template-rows: repeat(5, 1fr); 
-            gap: 2px; /* Space between the grid cells */
+            gap: 2px;
             z-index: 2;
             border: 2px solid rgb(48, 61, 143);
             border-radius: 30px;
         }
         .cell {
-            background-color: rgb(255, 255, 255); /* Each cell is white */
-            position: relative; /* To help with circle positioning */
+            background-color: rgb(255, 255, 255);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
         }
         .button {
             width: 100%; 
             height: 100%; 
-            padding: 5px; /* Reduced padding to fit more text */
-            font-size: 12px; /* Reduced font size to fit more text */
+            padding: 5px;
+            font-size: 14px;
             background-color: rgb(255, 255, 255);
             color: rgb(48, 61, 143);
             border: none;
             cursor: pointer;
             word-wrap: break-word; /* Allow words to wrap */
-            overflow: hidden; /* Hide overflow */
-            text-overflow: ellipsis; /* Add ellipsis for overflow */
+            word-break: break-word; /* Break words that are too long */
+            white-space: normal; /* Force text to wrap */
+            overflow: visible; /* Show overflow - don't cut off text */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            line-height: 1.2; /* Better readability */
+            text-align: center; /* Center the text */
         }
         .button:hover {
             background-color: rgb(48, 61, 143);
@@ -86,12 +99,15 @@
         .button-star {
             width: 100%;
             height: 100%; 
-            padding: 10px 20px;
+            padding: 10px;
             font-size: 16px;
             background-color: rgb(255, 255, 255);
             color: rgb(255, 217, 0);
             border: none;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .button-star:hover {
             background-color:rgb(48, 61, 143);
@@ -102,15 +118,15 @@
         }
         /* Red Circle Overlay */
         .red-circle {
-            position: fixed; /* Changed to fixed for better positioning */
-            width: 70px; /* Adjust size of the circle */
-            height: 70px; /* Adjust size of the circle */
+            position: fixed;
+            width: 70px;
+            height: 70px;
             background-color: rgba(226, 49, 49, 0.747);
             border-radius: 50%;
-            z-index: 4; /* Make sure it's above the grid */
-            transform: translate(-50%, -50%); /* Center the circle on the click point */
-            display: none; /* Hidden by default */
-            pointer-events: none; /* Ensures clicks go through to buttons */
+            z-index: 4;
+            transform: translate(-50%, -50%);
+            display: none;
+            pointer-events: none;
         }
     </style>
 </head>

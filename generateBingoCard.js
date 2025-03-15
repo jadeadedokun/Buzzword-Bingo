@@ -16,12 +16,32 @@ async function loadBuzzwords() {
     }
 }
 
-// Function to shorten long words for better display
-function shortenIfNeeded(word) {
-    // If the word is too long, shorten it
-    if (word.length > 15) {
-        return word.substring(0, 14) + "...";
+// Function to format words properly
+function formatText(word) {
+    // If it's a multi-word term (with space), split into two lines
+    if (word.includes(" ")) {
+        const words = word.split(" ");
+        
+        // If just two words, put each on its own line
+        if (words.length === 2) {
+            return words.join("<br>");
+        } 
+        // For more words, try to split evenly
+        else {
+            const midIndex = Math.ceil(words.length / 2);
+            const firstPart = words.slice(0, midIndex).join(" ");
+            const secondPart = words.slice(midIndex).join(" ");
+            return firstPart + "<br>" + secondPart;
+        }
     }
+    
+    // For single long words, add a line break in the middle
+    if (word.length > 10) {
+        const midIndex = Math.ceil(word.length / 2);
+        return word.slice(0, midIndex) + "<br>" + word.slice(midIndex);
+    }
+    
+    // Short single words don't need splitting
     return word;
 }
 
@@ -41,9 +61,6 @@ async function generateBingoBoard() {
 
     let grid = document.getElementById("bingo-grid");
     grid.innerHTML = ""; // Clear previous grid
-    
-    // Reference to the middle button for the red circle
-    let middleButtonElement = null;
 
     // Create the 2D BingoCard array and render it
     for (let row = 0; row < 5; row++) {
@@ -69,13 +86,11 @@ async function generateBingoBoard() {
                 let starIcon = document.createElement("i");
                 starIcon.classList.add("fas", "fa-star");
                 buttonElement.appendChild(starIcon);
-                
-                // Save reference to the middle button for the red circle
-                middleButtonElement = buttonElement;
             } else {
                 buttonElement.classList.add("button");
-                // Shorten the text if it's too long
-                buttonElement.textContent = shortenIfNeeded(word);
+                
+                // Format the word so it fits well in the cell
+                buttonElement.innerHTML = formatText(word);
             }
 
             // Attach click event
@@ -91,19 +106,6 @@ async function generateBingoBoard() {
 
     // Share the bingoCard with the gameFunctionality.js
     setBingoCard(bingoCard);
-    
-    // Position the red circle over the FREE SPACE after a slight delay
-    // This ensures elements are rendered before positioning
-    setTimeout(() => {
-        if (middleButtonElement) {
-            const buttonRect = middleButtonElement.getBoundingClientRect();
-            const redCircle = document.getElementById("redCircle");
-            
-            redCircle.style.left = `${buttonRect.left + buttonRect.width / 2}px`;
-            redCircle.style.top = `${buttonRect.top + buttonRect.height / 2}px`;
-            redCircle.style.display = 'block';
-        }
-    }, 100);
 }
 
 // Generate a new bingo board when the page loads
