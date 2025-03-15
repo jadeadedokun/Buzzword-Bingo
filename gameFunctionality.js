@@ -14,15 +14,22 @@ export function wasClicked(cell, buttonElement, event) {
     const buttonCenterX = buttonRect.left + buttonRect.width / 2;
     const buttonCenterY = buttonRect.top + buttonRect.height / 2;
     
-    // Set the position of the red circle to the button's center
-    const redCircle = document.getElementById("redCircle");
-    
-    // Make the circle exactly centered on the button
-    redCircle.style.left = `${buttonCenterX}px`;
-    redCircle.style.top = `${buttonCenterY}px`;
-    
-    // Make the circle visible
-    redCircle.style.display = 'block';
+    // Find the red circle in the DOM, or create one if it doesn't exist
+    let redCircle = document.getElementById("redCircle");
+
+    // If the red circle doesn't exist, create one
+    if (!redCircle) {
+        redCircle = document.createElement('div');
+        redCircle.id = 'redCircle'; // Add ID for easier reference
+        redCircle.classList.add('red-circle');
+        
+        // Append the red circle to the body
+        document.body.appendChild(redCircle);
+    }
+
+    // Position the red circle at the button's center
+    redCircle.style.left = `${buttonCenterX - redCircle.offsetWidth / 2}px`;
+    redCircle.style.top = `${buttonCenterY - redCircle.offsetHeight / 2}px`;
     
     // Mark the button as clicked in appearance
     if (cell.isClicked) {
@@ -36,7 +43,7 @@ export function wasClicked(cell, buttonElement, event) {
             buttonElement.style.color = "rgb(48, 61, 143)";
         }
         
-        // Hide the circle if unchecking
+        // If the button is unchecked, hide the red circle
         redCircle.style.display = 'none';
     }
 
@@ -68,24 +75,32 @@ export function wasClicked(cell, buttonElement, event) {
         const restartButton = document.createElement('button');
         restartButton.textContent = 'Restart Game';
         restartButton.style.position = 'absolute';
-        restartButton.style.top = '65%';  // Position below the image
+        restartButton.style.top = '75%';  // Position below the image
         restartButton.style.left = '50%';
         restartButton.style.transform = 'translateX(-50%)'; // Center horizontally
         restartButton.style.padding = '10px 20px';
-        restartButton.style.fontSize = '20px';
-        restartButton.style.backgroundColor = 'rgb(48, 61, 143)';
+        restartButton.style.fontSize = '40px';
+        restartButton.style.backgroundColor = 'rgb(34, 43, 105)';
         restartButton.style.color = 'white';
         restartButton.style.border = 'none';
         restartButton.style.cursor = 'pointer';
         restartButton.style.zIndex = '10000'; // Make sure it's above other content
+        restartButton.style.border = '2px solid rgb(34, 43, 105)';
+        restartButton.style.borderRadius = '40px';
+        restartButton.style.fontFamily = 'Copperplate';
+
 
         // Style the button on hover
         restartButton.addEventListener('mouseover', function() {
-            restartButton.style.backgroundColor = 'rgb(255, 217, 0)'; // Change on hover
+            restartButton.style.backgroundColor = 'rgba(255, 255, 255, 0)'; // Change on hover
+            restartButton.style.color = 'rgb(34, 43, 105)'; 
+            
         });
 
         restartButton.addEventListener('mouseout', function() {
-            restartButton.style.backgroundColor = 'rgb(48, 61, 143)'; // Revert back
+            restartButton.style.backgroundColor = 'rgb(34, 43, 105)'; // Revert back
+            restartButton.style.color = 'rgb(255, 255, 255)'; // Revert back
+
         });
 
         // Append the button to the body (or a specific container)
@@ -101,10 +116,25 @@ export function wasClicked(cell, buttonElement, event) {
             // Remove the win image and restart button
             winImage.remove();
             restartButton.remove();
+            blurOverlay.remove();
 
             // Call the function to generate a new Bingo board
             generateBingoBoard(); // This will re-generate the Bingo board
         });
+        // Create the background blur overlay
+        const blurOverlay = document.createElement('div');
+        blurOverlay.style.position = 'fixed';
+        blurOverlay.style.top = '0';
+        blurOverlay.style.left = '0';
+        blurOverlay.style.width = '100%';
+        blurOverlay.style.height = '100%';
+        blurOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)'; // Semi-transparent dark background
+        blurOverlay.style.zIndex = '5'; // Make sure it's below the win image but above the rest
+        blurOverlay.style.backdropFilter = 'blur(5px)'; // Apply blur effect to the background
+        blurOverlay.style.display = 'block';
+
+        // Append the blur overlay to the body
+        document.body.appendChild(blurOverlay);
     }
 }
 
