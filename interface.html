@@ -21,35 +21,46 @@
             flex-direction: column;
         }
         h1 {
-            font-size: 80px; 
+            font-size: 130px; 
             position: absolute;
-            top: 20px;
-            color: rgb(206, 29, 168);
+            top: 150px;
+            color: rgb(188, 197, 245);
             margin-top: 10px;
-            font-family: 'Arial', sans-serif;
+            font-family: 'Copperplate', serif;
+            font-weight: bold;
+            z-index: 3;
+        }
+        h2 {
+            font-size: 74px; 
+            position: absolute;
+            top: 80px;
+            color:  rgb(255, 255, 255);
+            margin-top: 10px;
+            font-family: 'Copperplate', serif;
             font-weight: bold;
             z-index: 3;
         }
         .background-rectangle {
             position: absolute; 
             width: 600px; 
-            height: 700px; 
-            background-color:rgb(4, 13, 70);
+            height: 800px; 
+            background-color:rgb(48, 61, 143);
             z-index: 1; 
-            margin-top: 100px;
-            border-radius: 5px;
+            margin-top: 10px;
+            border-radius: 30px;
         }
         .square {
             width: 500px;
             height: 500px;
-            background-color: rgb(4, 13, 70);  /* colour for grid lines*/
+            background-color: rgb(48, 61, 143);  /* colour for grid lines*/
             margin-top: 200px;
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             grid-template-rows: repeat(5, 1fr); 
             gap: 2px; /* Space between the grid cells */
             z-index: 2;
-            border: 2px solid rgb(4, 13, 70);
+            border: 2px solid rgb(48, 61, 143);
+            border-radius: 30px;
         }
         .cell {
             background-color: rgb(255, 255, 255); /* Each cell is white */
@@ -60,12 +71,12 @@
             padding: 10px 20px;
             font-size: 16px;
             background-color: rgb(255, 255, 255);
-            color: rgb(165, 165, 165);
+            color: rgb(48, 61, 143);
             border: none;
             cursor: pointer;
         }
         .button:hover {
-            background-color: rgb(165, 165, 165);
+            background-color: rgb(48, 61, 143);
             color: rgb(255, 255, 255);
         }
         .button-star {
@@ -79,18 +90,31 @@
             cursor: pointer;
         }
         .button-star:hover {
-            background-color:rgb(255, 255, 255);
-            color: rgb(255, 0, 0);
+            background-color:rgb(48, 61, 143);
+            color: rgb(255, 255, 255);
         }
         .button-star i {
             font-size: 50px; 
+        }
+        /* Red Circle Overlay */
+        .red-circle {
+            position: absolute;
+            top: 330px; /* Adjust this value to position the circle properly */
+            left: 39.6%; /* Center the circle horizontally */
+            transform: translateX(-50%); /* Center the circle */
+            width: 70px; /* Adjust size of the circle */
+            height: 70px; /* Adjust size of the circle */
+            background-color: rgba(226, 49, 49, 0.747);
+            border-radius: 50%;
+            z-index: 4; /* Make sure it's above the grid */
         }
     </style>
 </head>
 <body>
     
     <div class="background-rectangle"></div>
-    <h1>Bingo</h1>
+    <h2>BUZZWORD</h2>
+    <h1>BINGO</h1>
     <div class="square">
         <div class="cell"><button class="button">Click Me!</button></div>
         <div class="cell"><button class="button">Click Me!</button></div>
@@ -122,6 +146,33 @@
         <div class="cell"><button class="button">Click Me!</button></div>
         <div class="cell"><button class="button">Click Me!</button></div>
     </div>
+    <!-- Red Circle Overlay -->
+    <div class="red-circle" id="redCircle"></div>
+
+    <script>
+        // Get all the buttons and the red circle
+        const buttons = document.querySelectorAll('.button');
+        const redCircle = document.getElementById('redCircle');
+
+        // Add click event listener to all buttons
+        buttons.forEach(button => {
+            button.addEventListener('click', function(event) {
+                // Get the position of the clicked button
+                const buttonRect = event.target.getBoundingClientRect();
+                
+                // Calculate the center of the button
+                const buttonCenterX = buttonRect.left + buttonRect.width / 2;
+                const buttonCenterY = buttonRect.top + buttonRect.height / 2;
+                
+                // Set the position of the red circle to the button's center
+                const offsetX = 30;  // Adjust this value to move the red circle further left
+
+                redCircle.style.left = `${buttonCenterX - redCircle.offsetWidth / 2 + offsetX}px`;
+                redCircle.style.top = `${buttonCenterY - redCircle.offsetHeight / 2}px`;
+
+            });
+        });
+    </script>
     
 </body>
 </html>
