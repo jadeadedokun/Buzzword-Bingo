@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard - Buzzword Bingo</title>
+    <style>
+        body {
+            font-family: 'Copperplate', serif;
+            font-weight: bold;
+            text-align: center;
+            background-color: rgb(48, 61, 143);
+            color: white;
+            padding: 20px;
+        }
+        h1 {
+            font-size: 65px;
+            margin-bottom: 20px;
+            color: rgb(188, 197, 245);
+        }
+        table {
+            width: 50%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background: white;
+            color: rgb(48, 61, 143);
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid black;
+            text-align: center;
+        }
+        th {
+            background-color: rgb(255, 217, 0);
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Buzzword Bingo Leaderboard</h1>
+
+    <h2>🏆 Fastest Winning Times</h2>
+    <table id="playersTable">
+        <thead>
+            <tr>
+                <th>Nickname</th>
+                <th>Time (seconds)</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <h2>🔥 Most Clicked Words</h2>
+    <table id="wordsTable">
+        <thead>
+            <tr>
+                <th>Word</th>
+                <th>Click Count</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script>
+        async function fetchLeaderboardData() {
+            try {
+                // Fetch top players
+                let playersResponse = await fetch("http://localhost:3000/top-players");
+                let players = await playersResponse.json();
+                let playersTable = document.querySelector("#playersTable tbody");
+
+                playersTable.innerHTML = ""; // Clear previous content
+                players.forEach(player => {
+                    let row = `<tr><td>${player.nickname}</td><td>${player.time}</td></tr>`;
+                    playersTable.innerHTML += row;
+                });
+
+                // Fetch top words
+                let wordsResponse = await fetch("http://localhost:3000/top-words");
+                let words = await wordsResponse.json();
+                let wordsTable = document.querySelector("#wordsTable tbody");
+
+                wordsTable.innerHTML = ""; // Clear previous content
+                words.forEach(word => {
+                    let row = `<tr><td>${word.word}</td><td>${word.count}</td></tr>`;
+                    wordsTable.innerHTML += row;
+                });
+
+            } catch (error) {
+                console.error("Error fetching leaderboard data:", error);
+            }
+        }
+
+        // Load data when the page is loaded
+        window.onload = fetchLeaderboardData;
+    </script>
+
+</body>
+</html>
