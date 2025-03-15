@@ -1,9 +1,4 @@
-// BingoCell constructor
-function BingoCell(cellNumber, cellWord) {
-    this.isClicked = false; // Tracks if the cell is clicked
-    this.cellName = `button${cellNumber}`; // Unique button ID
-    this.word = cellWord;
-}
+import { BingoCell } from './BingoCell.js';
 
 // Bingo board stored as a 2D array
 let bingoCard = [];
