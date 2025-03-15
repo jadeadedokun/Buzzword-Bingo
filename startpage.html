@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buzzword Bingo - Start</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: center;
+            text-align: center;
+            flex-direction: column;
+            padding: 50px;
+            background-color:rgb(48, 61, 143);
+            
+        }
+        h1 {
+            font-size: 74px; 
+            position: center;
+            top: 80px;
+            color:  rgb(255, 255, 255);
+            margin-top: 10px;
+            font-family: 'Copperplate', serif;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        h2 {
+            font-size: 130px; 
+            position: center;
+            top: 150px;
+            color: rgb(188, 197, 245);
+            font-family: 'Copperplate', serif;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        p {
+            font-size: 30px; 
+            position: center;
+            top: 150px;
+            color: rgb(255, 255, 255);
+            font-family: 'Copperplate', serif;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        input {
+            padding: 10px;
+            font-size: 16px;
+            width: 250px;
+            margin-top: 10px;
+            border-radius: 30px;
+            text-align: center;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: rgb(255, 217, 0);
+            color:rgb(48, 61, 143);
+            border: none;
+            cursor: pointer;
+            border-radius: 30px;
+            font-family: 'Copperplate', serif;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: rgb(226, 49, 49);
+        }
+    </style>
+</head>
+<body>
+
+    <h1>BUZZWORD</h1>
+    <h2>BINGO</h2>
+    <p>Enter your nickname to start:</p>
+    <input type="text" id="playerName" placeholder="Your Nickname">
+    <br>
+    <button onclick="startGame()">Start Game</button>
+
+    <script>
+        function startGame() {
+            let name = document.getElementById("playerName").value.trim();
+
+            if (name === "") {
+                alert("Please enter your nickname to continue!");
+                return;
+            }
+
+            localStorage.setItem("playerName", name); // Store name for later use
+            window.location.href = "bingo.html"; // Redirect to bingo game page
+        }
+    </script>
+
+</body>
+</html>
