@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buzzword Bingo</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: rgb(255, 255, 255);
+            position: relative;
+            text-align: center;
+            flex-direction: column;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        .game-container {
+            position: relative;
+            width: 90%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            font-size: 15vmin; 
+            position: absolute;
+            top: 22%;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgb(188, 197, 245);
+            margin-top: 10px;
+            font-family: 'Copperplate', serif;
+            font-weight: bold;
+            z-index: 3;
+            width: 100%;
+        }
+        
+        h2 {
+            font-size: 9vmin; 
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgb(255, 255, 255);
+            margin-top: 10px;
+            font-family: 'Copperplate', serif;
+            font-weight: bold;
+            z-index: 3;
+            width: 100%;
+        }
+        
+        .background-rectangle {
+            position: absolute;
+            width: 100%;
+            height: 140vmin;
+            max-height: 800px;
+            background-color: rgb(48, 61, 143);
+            z-index: 1; 
+            margin-top: 10px;
+            border-radius: 30px;
+        }
+        
+        #bingo-grid {
+            width: 80vmin;
+            height: 80vmin;
+            max-width: 500px;
+            max-height: 500px;
+            background-color: rgb(48, 61, 143);
+            margin: 45vmin auto 0;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-template-rows: repeat(5, 1fr); 
+            gap: 2px;
+            z-index: 2;
+            border: 2px solid rgb(48, 61, 143);
+            border-radius: 5%;
+            position: relative;
+        }
+        
+        .bingo-cell {
+            background-color: rgb(255, 255, 255);
+            color: rgb(48, 61, 143);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 2vmin;
+            position: relative;
+            overflow: hidden;
+            word-break: break-word;
+        }
+        
+        @media (min-width: 768px) {
+            .bingo-cell {
+                font-size: 14px;
+            }
+        }
+        
+        .bingo-cell:hover {
+            background-color: rgb(230, 230, 255);
+        }
+        
+        .bingo-cell.marked {
+            background-color: rgb(48, 61, 143);
+            color: rgb(255, 255, 255);
+        }
+        
+        /* Special styling for FREE SPACE */
+        .bingo-cell.marked[id="button33"] {
+            background-color: rgb(255, 217, 0);
+            color: rgb(48, 61, 143);
+        }
+        
+        /* Red Circle Overlay */
+        .red-circle {
+            position: absolute;
+            width: 85%;
+            height: 85%;
+            background-color: rgba(226, 49, 49, 0.7);
+            border-radius: 50%;
+            z-index: 4;
+            pointer-events: none; /* Make sure it doesn't interfere with clicks */
+            transform: translate(-50%, -50%);
+            left: 50%;
+            top: 50%;
+            display: none; /* Hidden by default */
+        }
+        
+        @media (max-width: 500px) {
+            h1 {
+                font-size: 14vmin;
+                top: 20%;
+            }
+            
+            h2 {
+                font-size: 8vmin;
+            }
+            
+            #bingo-grid {
+                margin-top: 40vmin;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="background-rectangle"></div>
+        <h2>BUZZWORD</h2>
+        <h1>BINGO</h1>
+        
+        <!-- This div will be populated by the JavaScript -->
+        <div id="bingo-grid"></div>
+    </div>
+    
+    <script>
+        // BingoCell class
+        class BingoCell {
+            constructor(cellNumber, cellWord) {
+                this.isClicked = false; // Tracks if the cell is clicked
+                this.cellName = `button${cellNumber}`; // Unique button ID
+                this.word = cellWord; // Word assigned to this cell
+            }
+
+            toggle() {
+                this.isClicked = !this.isClicked; // Toggle state
+            }
+        }
+
+        // Bingo board stored as a 2D array
+        let bingoCard = [];
+
+        // Function to fetch buzzwords from a text file
+        async function loadBuzzwords() {
+            try {
+                const response = await fetch("buzzwords.txt");
+                const text = await response.text();
+                return text.split("\n").map(word => word.trim()).filter(word => word.length > 0);
+            } catch (error) {
+                console.error("Error loading buzzwords:", error);
+                // Fallback buzzwords if file can't be loaded
+                return [
+                    "Artificial Intelligence", "Machine Learning", "Cloud Computing", 
+                    "Blockchain", "Cybersecurity", "Big Data", "Internet of Things",
+                    "Virtual Reality", "Augmented Reality", "5G", "Automation",
+                    "Smartphone", "Smartwatch", "Wi-Fi", "USB", "Bluetooth",
+                    "Streaming", "Social Media", "App", "Website", "E-commerce",
+                    "CRM", "Data", "Analytics", "Search Engine", "SEO",
+                    "Digital Marketing", "Content Management", "Email Marketing", "SaaS",
+                    "IaaS", "PaaS", "Open Source", "API", "Cloud Storage"
+                ];
+            }
+        }
+
+        // Function to handle cell clicks
+        function wasClicked(cell, cellElement) {
+            // Toggle the clicked state of the BingoCell
+            cell.toggle();
+
+            // Mark or unmark the cell visually
+            cellElement.classList.toggle("marked", cell.isClicked);
+
+            // Handle the red dot
+            let redCircle = cellElement.querySelector('.red-circle');
+            
+            if (cell.isClicked) {
+                // If there's no red circle yet, create one
+                if (!redCircle) {
+                    redCircle = document.createElement('div');
+                    redCircle.className = 'red-circle';
+                    cellElement.appendChild(redCircle);
+                }
+                redCircle.style.display = 'block';
+            } else if (redCircle) {
+                // Hide the circle if unchecking
+                redCircle.style.display = 'none';
+            }
+
+            // Check if this click results in a win
+            if (hasWon(cell)) {
+                setTimeout(() => {
+                    alert("Bingo! You've won!");
+                }, 100); // Small delay to allow the circle to be seen
+            }
+        }
+
+        // Function to check for a win
+        function hasWon(recentlyClickedCell) {
+            // Only proceed if the cell is clicked
+            if (!recentlyClickedCell.isClicked) {
+                return false;
+            }
+
+            // Extract coordinates from the cellName
+            let cellName = recentlyClickedCell.cellName;
+            let row = Math.floor(parseInt(cellName.replace("button", "")) / 10) - 1;
+            let col = (parseInt(cellName.replace("button", "")) % 10) - 1;
+            
+            // Check for horizontal win
+            let horizontalWin = true;
+            for (let c = 0; c < 5; c++) {
+                if (!bingoCard[row][c].isClicked) {
+                    horizontalWin = false;
+                    break;
+                }
+            }
+
+            // Check for vertical win
+            let verticalWin = true;
+            for (let r = 0; r < 5; r++) {
+                if (!bingoCard[r][col].isClicked) {
+                    verticalWin = false;
+                    break;
+                }
+            }
+
+            // Check for diagonal win (top-left to bottom-right)
+            let diagonalWin1 = true;
+            if (row === col) {
+                for (let i = 0; i < 5; i++) {
+                    if (!bingoCard[i][i].isClicked) {
+                        diagonalWin1 = false;
+                        break;
+                    }
+                }
+            } else {
+                diagonalWin1 = false;
+            }
+
+            // Check for diagonal win (top-right to bottom-left)
+            let diagonalWin2 = true;
+            if (row + col === 4) {
+                for (let i = 0; i < 5; i++) {
+                    if (!bingoCard[i][4 - i].isClicked) {
+                        diagonalWin2 = false;
+                        break;
+                    }
+                }
+            } else {
+                diagonalWin2 = false;
+            }
+
+            // Return true if any win condition is met
+            return horizontalWin || verticalWin || diagonalWin1 || diagonalWin2;
+        }
+
+        // Function to generate a Bingo board
+        async function generateBingoBoard() {
+            let words = await loadBuzzwords();
+            if (words.length < 24) {
+                console.error("Not enough buzzwords available!");
+                return;
+            }
+
+            // Shuffle and select 24 words
+            let selectedWords = words.sort(() => Math.random() - 0.5).slice(0, 24);
+            selectedWords.splice(12, 0, "FREE SPACE"); // Place free space in the center
+
+            bingoCard = []; // Reset the 2D bingo board
+
+            let grid = document.getElementById("bingo-grid");
+            grid.innerHTML = ""; // Clear previous grid
+
+            // Create the 2D BingoCard array and render it
+            for (let row = 0; row < 5; row++) {
+                let rowArray = [];
+                for (let col = 0; col < 5; col++) {
+                    let cellNumber = (row + 1) * 10 + (col + 1); // Number format like 11, 12, 13...
+                    let word = selectedWords[row * 5 + col];
+                    let cell = new BingoCell(cellNumber, word);
+                    rowArray.push(cell); // Store in the 2D array
+
+                    let cellElement = document.createElement("div");
+                    cellElement.classList.add("bingo-cell");
+                    cellElement.id = cell.cellName;
+                    cellElement.textContent = cell.word;
+
+                    // Mark the FREE SPACE as already clicked
+                    if (word === "FREE SPACE") {
+                        cell.isClicked = true;
+                        cellElement.classList.add("marked");
+                        
+                        // Add red circle to the FREE SPACE
+                        let redCircle = document.createElement('div');
+                        redCircle.className = 'red-circle';
+                        redCircle.style.display = 'block';
+                        cellElement.appendChild(redCircle);
+                    }
+
+                    // Attach click event
+                    cellElement.addEventListener("click", function() {
+                        wasClicked(cell, cellElement);
+                    });
+
+                    grid.appendChild(cellElement);
+                }
+                bingoCard.push(rowArray); // Push row into the main 2D array
+            }
+        }
+
+        // Generate a new bingo board when the page loads
+        window.onload = generateBingoBoard;
+    </script>
+</body>
+</html>
