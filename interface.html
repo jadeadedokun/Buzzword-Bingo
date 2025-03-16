@@ -126,6 +126,46 @@
             left: 50%;
             transform: translate(-50%, -50%);
         }
+        /* Style for the reset button */
+        .button-reset {
+            position: absolute;
+            top: 12%; /* Adjust to center vertically in the middle of the rectangle */
+            left: 26%;
+            width: 110px;
+            height: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            background-color: rgb(255, 255, 255);
+            color: rgb(48, 61, 143);
+            border: 2px solid rgb(48, 61, 143);
+            border-radius: 40px;
+            cursor: pointer;
+        }
+
+        .button-reset:hover {
+            background-color: rgb(48, 61, 143);
+            color: rgb(255, 255, 255);
+        }
+        /* Style for the reset button */
+        .button-leadboard {
+            position: absolute;
+            top: 20%; /* Adjust to center vertically in the middle of the rectangle */
+            left: 26%;
+            width: 110px;
+            height: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            background-color: rgb(255, 255, 255);
+            color: rgb(48, 61, 143);
+            border: 2px solid rgb(48, 61, 143);
+            border-radius: 40px;
+            cursor: pointer;
+        }
+
+        .button-leadboard:hover {
+            background-color: rgb(48, 61, 143);
+            color: rgb(255, 255, 255);
+        }
     </style>
 </head>
 <body>
@@ -141,6 +181,9 @@
     
     <!-- This will be replaced with the dynamically populated bingo grid -->
     <div id="bingo-grid" class="square"></div>
+    <!-- Reset Button placed to the side of the blue rectangle -->
+    <button id="reset-button" class="button-reset">Reset</button>
+    <button id="leadboard-button" class="button-leadboard">leadboard</button>
     
     <!-- Import modules -->
     <script type="module" src="BingoCell.js"></script>
