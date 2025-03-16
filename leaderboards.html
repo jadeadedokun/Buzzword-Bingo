@@ -65,7 +65,7 @@
         async function fetchLeaderboardData() {
             try {
                 // Fetch top players
-                let playersResponse = await fetch("http://localhost:3000/top-players");
+                let playersResponse = await fetch("top-players");
                 let players = await playersResponse.json();
                 let playersTable = document.querySelector("#playersTable tbody");
 
@@ -76,7 +76,7 @@
                 });
 
                 // Fetch top words
-                let wordsResponse = await fetch("http://localhost:3000/top-words");
+                let wordsResponse = await fetch("top-words");
                 let words = await wordsResponse.json();
                 let wordsTable = document.querySelector("#wordsTable tbody");
 

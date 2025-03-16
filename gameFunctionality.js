@@ -1,4 +1,7 @@
 // gameFunctionality.js
+
+import { insertScore, updateWordClick } from "populateDB.js";
+
 // Global bingoCard variable that will be set from generateBingoCard.js
 let bingoCard = [];
 let generateBoardFunction = null; // Store reference to the generateBingoBoard function
@@ -15,6 +18,9 @@ export function setGenerateBoardFunction(func) {
 export function wasClicked(cell, buttonElement, event) {
     // Toggle the clicked state of the BingoCell
     cell.toggle();
+
+    // log word click to database
+    updateWordClick(cell.word);
     
     // Get the position of the clicked button for the red circle
     const buttonRect = buttonElement.getBoundingClientRect();
@@ -208,6 +214,12 @@ export function hasWon(recentlyClickedCell) {
         }
     } else {
         diagonalWin2 = false;
+    }
+
+    if (horizontalWin || verticalWin || diagonalWin1 || diagonalWin2) {
+        let playerName = localStorage.getItem("playerName");
+        let timeTaken = calculateGameTime();
+        insertScore(playerName, timeTaken);
     }
 
     // Return true if any win condition is met
