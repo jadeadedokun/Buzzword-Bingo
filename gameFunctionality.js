@@ -9,42 +9,34 @@ export function wasClicked(cell, buttonElement, event) {
     // Toggle the clicked state of the BingoCell
     cell.toggle();
     
-    // Get the position of the clicked button for the red circle
-    const buttonRect = buttonElement.getBoundingClientRect();
-    const buttonCenterX = buttonRect.left + buttonRect.width / 2;
-    const buttonCenterY = buttonRect.top + buttonRect.height / 2;
-    
-    // Find the red circle in the DOM, or create one if it doesn't exist
-    let redCircle = document.getElementById("redCircle");
-
-    // If the red circle doesn't exist, create one
-    if (!redCircle) {
-        redCircle = document.createElement('div');
-        redCircle.id = 'redCircle'; // Add ID for easier reference
-        redCircle.classList.add('red-circle');
-        
-        // Append the red circle to the body
-        document.body.appendChild(redCircle);
-    }
-
-    // Position the red circle at the button's center
-    redCircle.style.left = `${buttonCenterX - redCircle.offsetWidth / 2}px`;
-    redCircle.style.top = `${buttonCenterY - redCircle.offsetHeight / 2}px`;
-    
     // Mark the button as clicked in appearance
     if (cell.isClicked) {
         if (!buttonElement.classList.contains("button-star")) {
-            buttonElement.style.backgroundColor = "rgb(48, 61, 143)";
+            buttonElement.style.backgroundColor = "rgb(188, 197, 245)";
             buttonElement.style.color = "rgb(255, 255, 255)";
+            buttonElement.style.border = "2px rgb(255, 255, 255)";
         }
     } else {
         if (!buttonElement.classList.contains("button-star")) {
             buttonElement.style.backgroundColor = "rgb(255, 255, 255)";
-            buttonElement.style.color = "rgb(48, 61, 143)";
+            buttonElement.style.color = "rgb(188, 197, 245)";
+            buttonElement.style.border = "2px rgb(255, 255, 255)";
         }
-        
-        // If the button is unchecked, hide the red circle
-        redCircle.style.display = 'none';
+    }
+    
+    // Mark the button as clicked in appearance
+    if (cell.isClicked) {
+        if (!buttonElement.classList.contains("button-star")) {
+            buttonElement.style.backgroundColor = "rgb(188, 197, 245)";
+            buttonElement.style.color = "rgb(255, 255, 255)";
+            buttonElement.style.border = "2px rgb(255, 255, 255)";
+        }
+    } else {
+        if (!buttonElement.classList.contains("button-star")) {
+            buttonElement.style.backgroundColor = "rgb(255, 255, 255)";
+            buttonElement.style.color = "rgb(188, 197, 245)";
+            buttonElement.style.border = "2px rgb(255, 255, 255)";
+        }
     }
 
     // Check if this click results in a win
