@@ -1,5 +1,3 @@
-<!-- Hello world-->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -42,42 +40,60 @@
         }
         .background-rectangle {
             position: absolute; 
-            width: 650px; /* Increased width to accommodate longer words */
+            width: 650px;
             height: 800px; 
             background-color:rgb(48, 61, 143);
             z-index: 1; 
             margin-top: 10px;
             border-radius: 30px;
         }
+        .timer-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 15px;
+            z-index: 4;
+        }
+        .timer {
+            font-size: 24px;
+            color: white;
+            font-family: 'Copperplate', serif;
+        }
         .square {
-            width: 550px; /* Increased width to accommodate longer words */
+            width: 550px;
             height: 500px;
-            background-color: rgb(48, 61, 143);  /* colour for grid lines*/
+            background-color: rgb(48, 61, 143);
             margin-top: 200px;
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             grid-template-rows: repeat(5, 1fr); 
-            gap: 2px; /* Space between the grid cells */
+            gap: 2px;
             z-index: 2;
             border: 2px solid rgb(48, 61, 143);
             border-radius: 30px;
         }
         .cell {
-            background-color: rgb(255, 255, 255); /* Each cell is white */
-            position: relative; /* To help with circle positioning */
+            background-color: rgb(255, 255, 255);
+            position: relative;
         }
         .button {
             width: 100%; 
             height: 100%; 
-            padding: 5px; /* Reduced padding to fit more text */
-            font-size: 12px; /* Reduced font size to fit more text */
+            padding: 5px;
+            font-size: 14px; /* Increased font size */
+            font-weight: bold; /* Made text bold */
             background-color: rgb(255, 255, 255);
             color: rgb(48, 61, 143);
             border: 2px rgb(48, 61, 143);
             cursor: pointer;
-            word-wrap: break-word; /* Allow words to wrap */
-            overflow: hidden; /* Hide overflow */
-            text-overflow: ellipsis; /* Add ellipsis for overflow */
+            word-wrap: break-word;
+            overflow: hidden;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .button:hover {
             background-color: rgb(48, 61, 143);
@@ -100,19 +116,32 @@
         .button-star i {
             font-size: 50px; 
         }
-        
+        .red-circle {
+            background-color: rgba(255, 0, 0, 0.6);  /* 70% opacity red */
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
     </style>
 </head>
 <body>
-    
     <div class="background-rectangle"></div>
+    
+    <!-- Timer Container -->
+    <div class="timer-container">
+        <div id="timer" class="timer">00:00</div>
+    </div>
+    
     <h2>BUZZWORD</h2>
     <h1>BINGO</h1>
     
     <!-- This will be replaced with the dynamically populated bingo grid -->
     <div id="bingo-grid" class="square"></div>
     
-
     <!-- Import modules -->
     <script type="module" src="BingoCell.js"></script>
     <script type="module" src="gameFunctionality.js"></script>

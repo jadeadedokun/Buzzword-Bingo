@@ -1,5 +1,6 @@
+// generateBingoCard.js
 import { BingoCell } from './BingoCell.js';
-import { wasClicked, setBingoCard } from './gameFunctionality.js';
+import { wasClicked, setBingoCard, setGenerateBoardFunction } from './gameFunctionality.js';
 
 // Bingo board stored as a 2D array
 let bingoCard = [];
@@ -33,12 +34,6 @@ function formatText(word) {
             const secondPart = words.slice(midIndex).join(" ");
             return firstPart + "<br>" + secondPart;
         }
-    }
-    
-    // For single long words, add a line break in the middle
-    if (word.length > 10) {
-        const midIndex = Math.ceil(word.length / 2);
-        return word.slice(0, midIndex) + "<br>" + word.slice(midIndex);
     }
     
     // Short single words don't need splitting
@@ -106,7 +101,16 @@ async function generateBingoBoard() {
 
     // Share the bingoCard with the gameFunctionality.js
     setBingoCard(bingoCard);
+    
+    // Hide the red circle if it exists
+    const redCircle = document.getElementById("redCircle");
+    if (redCircle) {
+        redCircle.style.display = 'none';
+    }
 }
+
+// Share the generateBingoBoard function with gameFunctionality.js
+setGenerateBoardFunction(generateBingoBoard);
 
 // Generate a new bingo board when the page loads
 window.onload = generateBingoBoard;

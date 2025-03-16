@@ -1,132 +1,157 @@
+// gameFunctionality.js
 // Global bingoCard variable that will be set from generateBingoCard.js
 let bingoCard = [];
+let generateBoardFunction = null; // Store reference to the generateBingoBoard function
 
 export function setBingoCard(card) {
     bingoCard = card;
+}
+
+// New function to store reference to the generateBingoBoard function
+export function setGenerateBoardFunction(func) {
+    generateBoardFunction = func;
 }
 
 export function wasClicked(cell, buttonElement, event) {
     // Toggle the clicked state of the BingoCell
     cell.toggle();
     
-    // Mark the button as clicked in appearance
-    if (cell.isClicked) {
-        if (!buttonElement.classList.contains("button-star")) {
-            buttonElement.style.backgroundColor = "rgb(188, 197, 245)";
-            buttonElement.style.color = "rgb(255, 255, 255)";
-            buttonElement.style.border = "2px rgb(255, 255, 255)";
-        }
-    } else {
-        if (!buttonElement.classList.contains("button-star")) {
-            buttonElement.style.backgroundColor = "rgb(255, 255, 255)";
-            buttonElement.style.color = "rgb(188, 197, 245)";
-            buttonElement.style.border = "2px rgb(255, 255, 255)";
-        }
-    }
+    // Get the position of the clicked button for the red circle
+    const buttonRect = buttonElement.getBoundingClientRect();
+    const buttonCenterX = buttonRect.left + buttonRect.width / 2;
+    const buttonCenterY = buttonRect.top + buttonRect.height / 2;
     
-    // Mark the button as clicked in appearance
-    if (cell.isClicked) {
-        if (!buttonElement.classList.contains("button-star")) {
-            buttonElement.style.backgroundColor = "rgb(188, 197, 245)";
-            buttonElement.style.color = "rgb(255, 255, 255)";
-            buttonElement.style.border = "2px rgb(255, 255, 255)";
-        }
+    // Find the red circle in the DOM, or create one if it doesn't exist
+    let redCircle = buttonElement.querySelector('.red-circle');
+
+    // If the red circle doesn't exist, create one
+    if (!redCircle) {
+        redCircle = document.createElement('div');
+        redCircle.classList.add('red-circle');
+        
+        // Position the red circle absolutely within the button
+        redCircle.style.position = 'absolute';
+        redCircle.style.top = '50%';
+        redCircle.style.left = '50%';
+        redCircle.style.transform = 'translate(-50%, -50%)';
+        
+        // Append the red circle to the button
+        buttonElement.style.position = 'relative';
+        buttonElement.appendChild(redCircle);
+    }
+
+    // Toggle the red circle's visibility based on cell's clicked state
+    if (cell.isClicked && !buttonElement.classList.contains('button-star')) {
+        redCircle.style.display = 'block';
+        // Maintain white background and original text color when clicked
+        buttonElement.style.backgroundColor = 'rgb(255, 255, 255)';
+        buttonElement.style.color = 'rgb(48, 61, 143)';
     } else {
-        if (!buttonElement.classList.contains("button-star")) {
-            buttonElement.style.backgroundColor = "rgb(255, 255, 255)";
-            buttonElement.style.color = "rgb(188, 197, 245)";
-            buttonElement.style.border = "2px rgb(255, 255, 255)";
-        }
+        redCircle.style.display = 'none';
     }
 
     // Check if this click results in a win
     if (hasWon(cell)) {
-        //alert("Bingo! You've won!");
-        // Create an image element
-        const winImage = document.createElement('img');
+        // Create a win container to hold all win elements
+        const winContainer = document.createElement('div');
+        winContainer.id = 'win-container';
+        winContainer.style.position = 'fixed';
+        winContainer.style.top = '0';
+        winContainer.style.left = '0';
+        winContainer.style.width = '100%';
+        winContainer.style.height = '100%';
+        winContainer.style.display = 'flex';
+        winContainer.style.flexDirection = 'column';
+        winContainer.style.justifyContent = 'center';
+        winContainer.style.alignItems = 'center';
+        winContainer.style.zIndex = '1000';
         
-        // Set the image source (replace 'your-image-url.jpg' with your actual image URL or file path)
-        winImage.src = 'pngtree-bingo-ball-png-image_6462732.png';
-        
-        // Set the alt text (for accessibility)
-        winImage.alt = 'Congratulations! You win!';
-        
-        // Style the image (optional, adjust as necessary)
-        winImage.style.position = 'absolute';
-        winImage.style.top = '50%'; // Position it in the center
-        winImage.style.left = '50%';
-        winImage.style.transform = 'translate(-50%, -50%)'; // Center it perfectly
-        winImage.style.zIndex = '10'; // Make sure it appears on top of other elements
-        winImage.style.maxWidth = '80%'; // Adjust the image size (optional)
-        winImage.style.maxHeight = '80%'; // Adjust the image size (optional)
-
-        // Append the image to the body (or a specific container)
-        document.body.appendChild(winImage);
-
-        // Create a Restart Button
-        const restartButton = document.createElement('button');
-        restartButton.textContent = 'Restart Game';
-        restartButton.style.position = 'absolute';
-        restartButton.style.top = '75%';  // Position below the image
-        restartButton.style.left = '50%';
-        restartButton.style.transform = 'translateX(-50%)'; // Center horizontally
-        restartButton.style.padding = '10px 20px';
-        restartButton.style.fontSize = '40px';
-        restartButton.style.backgroundColor = 'rgb(34, 43, 105)';
-        restartButton.style.color = 'white';
-        restartButton.style.border = 'none';
-        restartButton.style.cursor = 'pointer';
-        restartButton.style.zIndex = '10000'; // Make sure it's above other content
-        restartButton.style.border = '2px solid rgb(34, 43, 105)';
-        restartButton.style.borderRadius = '40px';
-        restartButton.style.fontFamily = 'Copperplate';
-
-
-        // Style the button on hover
-        restartButton.addEventListener('mouseover', function() {
-            restartButton.style.backgroundColor = 'rgba(255, 255, 255, 0)'; // Change on hover
-            restartButton.style.color = 'rgb(34, 43, 105)'; 
-            
-        });
-
-        restartButton.addEventListener('mouseout', function() {
-            restartButton.style.backgroundColor = 'rgb(34, 43, 105)'; // Revert back
-            restartButton.style.color = 'rgb(255, 255, 255)'; // Revert back
-
-        });
-
-        // Append the button to the body (or a specific container)
-        document.body.appendChild(restartButton);
-
-        // Add event listener to restart the game when the button is clicked
-        restartButton.addEventListener('click', function() {
-            // Optionally, you can remove the current grid and reset the game here
-            // Clear the existing game board
-            document.getElementById('bingo-grid').innerHTML = '';  // Clear the grid
-            bingoCard = []; // Reset the bingo card array
-            
-            // Remove the win image and restart button
-            winImage.remove();
-            restartButton.remove();
-            blurOverlay.remove();
-
-            // Call the function to generate a new Bingo board
-            generateBingoBoard(); // This will re-generate the Bingo board
-        });
-        // Create the background blur overlay
+        // Create background blur overlay
         const blurOverlay = document.createElement('div');
         blurOverlay.style.position = 'fixed';
         blurOverlay.style.top = '0';
         blurOverlay.style.left = '0';
         blurOverlay.style.width = '100%';
         blurOverlay.style.height = '100%';
-        blurOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)'; // Semi-transparent dark background
-        blurOverlay.style.zIndex = '5'; // Make sure it's below the win image but above the rest
-        blurOverlay.style.backdropFilter = 'blur(5px)'; // Apply blur effect to the background
-        blurOverlay.style.display = 'block';
+        blurOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+        blurOverlay.style.zIndex = '999';
+        blurOverlay.style.backdropFilter = 'blur(5px)';
 
-        // Append the blur overlay to the body
+        // Create the win image
+        const winImage = document.createElement('img');
+        winImage.src = 'pngtree-bingo-ball-png-image_6462732.png';
+        winImage.alt = 'Congratulations! You win!';
+        winImage.style.maxWidth = '80%';
+        winImage.style.maxHeight = '60%';
+        winImage.style.zIndex = '1001';
+
+        // Create Restart Button
+        const restartButton = document.createElement('button');
+        restartButton.textContent = 'Restart Game';
+        restartButton.style.marginTop = '20px';
+        restartButton.style.padding = '10px 20px';
+        restartButton.style.fontSize = '40px';
+        restartButton.style.backgroundColor = 'rgb(34, 43, 105)';
+        restartButton.style.color = 'white';
+        restartButton.style.border = '2px solid rgb(34, 43, 105)';
+        restartButton.style.borderRadius = '40px';
+        restartButton.style.fontFamily = 'Copperplate';
+        restartButton.style.cursor = 'pointer';
+        restartButton.style.zIndex = '1002';
+
+        // Hover effects
+        restartButton.addEventListener('mouseover', function() {
+            restartButton.style.backgroundColor = 'rgba(255, 255, 255, 0)';
+            restartButton.style.color = 'rgb(34, 43, 105)'; 
+        });
+
+        restartButton.addEventListener('mouseout', function() {
+            restartButton.style.backgroundColor = 'rgb(34, 43, 105)';
+            restartButton.style.color = 'rgb(255, 255, 255)';
+        });
+
+        // Restart game functionality
+        restartButton.addEventListener('click', function() {
+            // Remove the entire win container (blurOverlay and all win elements)
+            document.body.removeChild(winContainer);
+            document.body.removeChild(blurOverlay);
+            
+            // Reset the current Bingo Card
+            resetBingoCard();
+        });
+
+        // Append elements to the container and body
+        winContainer.appendChild(winImage);
+        winContainer.appendChild(restartButton);
         document.body.appendChild(blurOverlay);
+        document.body.appendChild(winContainer);
+    }
+}
+
+// New function to reset the Bingo Card
+function resetBingoCard() {
+    // Reset cells
+    let buttons = document.querySelectorAll('#bingo-grid .cell button');
+    buttons.forEach(button => {
+        // Remove red circles
+        const redCircle = button.querySelector('.red-circle');
+        if (redCircle) {
+            button.removeChild(redCircle);
+        }
+
+        // Reset button styles for non-star buttons
+        if (!button.classList.contains('button-star')) {
+            button.style.backgroundColor = 'rgb(255, 255, 255)';
+            button.style.color = 'rgb(48, 61, 143)';
+        }
+    });
+
+    // Regenerate the board
+    if (generateBoardFunction) {
+        generateBoardFunction();
+    } else {
+        console.error("Generate board function not set");
+        location.reload();
     }
 }
 
